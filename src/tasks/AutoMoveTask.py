@@ -88,6 +88,8 @@ class AutoMoveTask(BaseCombatTask, TriggerTask):
                 raise TriggerDeactivateException()
         
     def on_click(self, x, y, button, pressed):
+        if self._executor.paused:
+            return
         if not self.in_team() or not og.device_manager.hwnd_window.is_foreground():
             return
         if self.config.get('激活键', 'x2') == 'x1':

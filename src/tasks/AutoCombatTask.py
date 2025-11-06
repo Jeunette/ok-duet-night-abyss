@@ -63,7 +63,7 @@ class AutoCombatTask(BaseCombatTask, TriggerTask):
         return ret
         
     def on_click(self, x, y, button, pressed):
-        if self.executor.paused:
+        if self._executor.paused:
             return
         if self.config.get('激活键', 'x2') == 'x1':
             btn = mouse.Button.x1
