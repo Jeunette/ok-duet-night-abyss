@@ -58,6 +58,17 @@ jobs:
               python -m unittest $_.FullName
           }
 
+      - name: Sync Repositories # 同步部分代码(deploy.txt中), 合并tag中间更新日志, 到更新库, 以减少用户更新使用的git库大小
+        id: sync   # Give the step an ID to access its outputs
+        uses: ok-oldking/partial-sync-repo@master # Replace with your action path
+        with:
+          repos: |
+            https://BnanZ0:${{ secrets.OK_GH }}@github.com/BnanZ0/ok-dna-update.git
+          sync_list: 'deploy.txt'
+          tag: ${{ github.ref_name }}
+          gitignore_file: '.update_repo_gitignore'
+          show_author: true #在更新日志中加入作者
+
       - name: Build with PyAppify Action
         id: build-app
         uses: ok-oldking/pyappify-action@master #使用pyappify打包exe
@@ -65,15 +76,17 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           body: |
             ### 下载包说明
               * ok-dna-win32-online-setup.exe 在线安装包, 在线白嫖的服务器不一定稳定, 建议优先使用完整包. 
               * ok-dna-win32-Global-setup.exe full package with dependencies, using GitHub and PyPi as update source 
               * 不要下载ok-dna-win32.zip,和SourceCode.zip, Do Not Download the SourceCode, ok-dna-win32.zip
-          files: pyappify_dist/*
-          token: ${{ secrets.GITHUB_TOKEN }}
+            ###  更新日志 ${{ steps.sync.outputs.start_tag }} -> ${{ steps.sync.outputs.end_tag }}:
+              ${{ steps.sync.outputs.changes_with_asterisk }}
           draft: false
           prerelease: false
-          generate_release_notes: true
+          files: pyappify_dist/*
 
