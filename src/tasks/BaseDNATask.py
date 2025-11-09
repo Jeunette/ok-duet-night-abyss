@@ -93,7 +93,7 @@ class BaseDNATask(BaseTask):
 
     def send_vk_up(self, vk_code):
         if not self.is_post_interaction(): return
-        self._executor.interaction.post(win32con.WM_KEYDOWN, vk_code, self._executor.interaction.lparam)
+        self._executor.interaction.post(win32con.WM_KEYUP, vk_code, self._executor.interaction.lparam)
 
     def is_post_interaction(self):
         if isinstance(self._executor.interaction, PostMessageInteraction):
