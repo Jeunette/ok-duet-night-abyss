@@ -143,6 +143,7 @@ config = {
         ["ok", "DiagnosisTask"],
     ],
     'trigger_tasks':[
+        ["src.tasks.AutoPickTask", "AutoPickTask"],
         ["src.tasks.AutoCombatTask", "AutoCombatTask"],
         ["src.tasks.AutoMoveTask", "AutoMoveTask"],
         ["src.tasks.AutoAimTask", "AutoAimTask"],

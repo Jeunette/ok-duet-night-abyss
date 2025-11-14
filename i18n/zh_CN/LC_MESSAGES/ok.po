@@ -389,3 +389,42 @@ msgstr ""
 
 msgid "ok-皎皎币60"
 msgstr ""
+
+msgid "60角色经验本"
+msgstr ""
+
+msgid "Auto Pick"
+msgstr "自动拾取"
+
+msgid "Auto Pick in Game World"
+msgstr "大世界自动拾取"
+
+msgid "优先选择持有数为0的密函奖励"
+msgstr ""
+
+msgid "刷武器密函时推荐同时开启下一选项"
+msgstr ""
+
+msgid "在上一选项启用时生效，多个目标时选择靠左的"
+msgstr ""
+
+msgid "完成时播放提示音"
+msgstr ""
+
+msgid "开局向前走"
+msgstr ""
+
+msgid "开局向前走几秒"
+msgstr ""
+
+msgid "开局重置角色位置"
+msgstr ""
+
+msgid "挂机模式"
+msgstr ""
+
+msgid "无悠闲全自动钓鱼 (原作者: B站无敌大蜜瓜)"
+msgstr ""
+
+msgid "自动避险"
+msgstr ""

@@ -8,6 +8,11 @@ from datetime import datetime, timedelta
 from ok import BaseTask, Box, Logger, color_range_to_bound, run_in_new_thread
 
 logger = Logger.get_logger(__name__)
+f_black_color = {
+    'r': (0, 20),  # Red range
+    'g': (0, 20),  # Green range
+    'b': (0, 20)  # Blue range
+}
 
 
 class BaseDNATask(BaseTask):
@@ -20,6 +25,16 @@ class BaseDNATask(BaseTask):
         self.old_mouse_pos = None
         self.next_monthly_card_start = 0
         self._logged_in = False
+
+    @property
+    def f_search_box(self):
+        f_search_box = self.get_box_by_name('pick_up_f')
+        f_search_box = f_search_box.copy(x_offset=-f_search_box.width * 0.3,
+                                         width_offset=f_search_box.width * 0.65,
+                                         height_offset=f_search_box.height * 8.3,
+                                         y_offset=-f_search_box.height * 1.3,
+                                         name='search_dialog')
+        return f_search_box
 
     def in_team(self) -> bool:
         if self.find_one('lv_text', threshold=0.8):
