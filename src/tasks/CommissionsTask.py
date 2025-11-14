@@ -46,7 +46,7 @@ class CommissionsTask(BaseDNATask):
         }
         self.config_type["使用技能"] = {
             "type": "drop_down",
-            "options": ["不使用", "战技", "终结技"],
+            "options": ["不使用", "战技", "终结技", "魔灵支援"],
         }
 
     def find_quit_btn(self, threshold=0):
@@ -281,6 +281,8 @@ class CommissionsTask(BaseDNATask):
                 self.get_current_char().send_combat_key()
             elif self.config.get("使用技能") == "终结技":
                 self.get_current_char().send_ultimate_key()
+            elif self.config.get("使用技能") == "魔灵支援":
+                self.get_current_char().send_geniemon_key()
         return skill_time
 
     def get_round_info(self):
