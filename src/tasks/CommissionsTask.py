@@ -426,7 +426,7 @@ class QuickMoveTask:
     def run(self):
         if self._owner.config.get("启用自动穿引共鸣", False):
             if not self._move_task:
-                from src.tasks.AutoMoveTask import AutoMoveTask
+                from src.tasks.trigger.AutoMoveTask import AutoMoveTask
 
                 self._move_task = self._owner.get_task_by_class(AutoMoveTask)
             

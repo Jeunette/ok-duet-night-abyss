@@ -500,7 +500,7 @@ class AutoEscortTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
         Returns:
             bool: True=成功完成或无需解密, False=检测失败需要重新开始任务
         """
-        from src.tasks.AutoPuzzleTask import AutoPuzzleTask
+        from src.tasks.trigger.AutoPuzzleTask import AutoPuzzleTask
 
         # 获取 AutoPuzzleTask 实例
         puzzle_task = self.get_task_by_class(AutoPuzzleTask)

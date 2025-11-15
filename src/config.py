@@ -130,14 +130,14 @@ config = {
     'version': version, #版本
     'my_app': ['src.globals', 'Globals'], # 全局单例对象, 可以存放加载的模型, 使用og.my_app调用
     'onetime_tasks': [  # tasks to execute
-        ["src.tasks.AutoFishTask", "AutoFishTask"],
+        ["src.tasks.fullauto.AutoFishTask", "AutoFishTask"],
+        ["src.tasks.fullauto.AutoExploration_Fast", "AutoExploration_Fast"],
+        ["src.tasks.fullauto.AutoEscortTask", "AutoEscortTask"],
+        ["src.tasks.fullauto.Auto65ArtifactTask_Fast", "Auto65ArtifactTask_Fast"],
+        ["src.tasks.fullauto.Auto70jjbTask", "Auto70jjbTask"],
+        ["src.tasks.fullauto.ImportTask", "ImportTask"],
         ["src.tasks.AutoSkill", "AutoSkill"],
         ["src.tasks.AutoExpulsion", "AutoExpulsion"],
-        ["src.tasks.AutoExploration_Fast", "AutoExploration_Fast"],
-        ["src.tasks.AutoEscortTask", "AutoEscortTask"],
-        ["src.tasks.Auto65ArtifactTask_Fast", "Auto65ArtifactTask_Fast"],
-        ["src.tasks.Auto70jjbTask", "Auto70jjbTask"],
-        ["src.tasks.ImportTask", "ImportTask"],
         ["src.tasks.AutoDefence", "AutoDefence"],
         ["src.tasks.AutoExploration", "AutoExploration"],
         ["src.tasks.AutoExcavation", "AutoExcavation"],
@@ -145,11 +145,11 @@ config = {
         ["ok", "DiagnosisTask"],
     ],
     'trigger_tasks':[
-        ["src.tasks.AutoPickTask", "AutoPickTask"],
-        ["src.tasks.AutoCombatTask", "AutoCombatTask"],
-        ["src.tasks.AutoMoveTask", "AutoMoveTask"],
-        ["src.tasks.AutoAimTask", "AutoAimTask"],
-        ["src.tasks.AutoRogueDialogTask", "AutoRogueDialogTask"],
-        ["src.tasks.AutoPuzzleTask", "AutoPuzzleTask"],
+        ["src.tasks.trigger.AutoPickTask", "AutoPickTask"],
+        ["src.tasks.trigger.AutoCombatTask", "AutoCombatTask"],
+        ["src.tasks.trigger.AutoMoveTask", "AutoMoveTask"],
+        ["src.tasks.trigger.AutoAimTask", "AutoAimTask"],
+        ["src.tasks.trigger.AutoRogueDialogTask", "AutoRogueDialogTask"],
+        ["src.tasks.trigger.AutoPuzzleTask", "AutoPuzzleTask"],
     ], 'scene': ["src.scene.DNAScene", "DNAScene"],
 }

@@ -4,7 +4,7 @@ from ok import Logger, TaskDisabledException
 
 from src.tasks.AutoExploration import AutoExploration
 from src.tasks.DNAOneTimeTask import DNAOneTimeTask
-from src.tasks.AutoEscortTask import AutoEscortTask
+from src.tasks.fullauto.AutoEscortTask import AutoEscortTask
 
 logger = Logger.get_logger(__name__)
 DEFAULT_ACTION_TIMEOUT = 10

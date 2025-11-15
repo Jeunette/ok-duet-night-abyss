@@ -30,7 +30,7 @@ class CombatCheck(BaseDNATask):
         else:
             in_combat = self.manual_in_combat and self.in_team() and og.device_manager.hwnd_window.is_foreground()
             if in_combat:
-                from src.tasks.AutoCombatTask import AutoCombatTask
+                from src.tasks.trigger.AutoCombatTask import AutoCombatTask
                 if isinstance(self, AutoCombatTask):
                     self.load_char()
                 self._in_combat = True
