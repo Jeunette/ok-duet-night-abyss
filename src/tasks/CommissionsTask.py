@@ -27,6 +27,7 @@ class CommissionsTask(BaseDNATask):
         self.default_config.update({
             '超时时间': 120,
             "委托手册": "不使用",
+            "委托手册指定轮次": "",
             "使用技能": "不使用",
             "技能释放频率": 5.0,
             "启用自动穿引共鸣": True,
@@ -35,6 +36,7 @@ class CommissionsTask(BaseDNATask):
             "优先选择持有数为0的密函奖励": False,
         })
         self.config_description.update({
+            "委托手册指定轮次": "范例: 3,5,8",
             "超时时间": "超时后将重启任务",
             "技能释放频率": "毎几秒释放一次技能",
             "启用自动穿引共鸣": "在需要跑图时时启用触发任务的自动穿引共鸣",
@@ -60,29 +62,29 @@ class CommissionsTask(BaseDNATask):
         return self.find_one("ingame_continue_icon", threshold=threshold, box=box)
 
     def find_bottom_start_btn(self, threshold=0):
-        return self.find_start_btn(threshold=threshold,
-                                   box=self.box_of_screen_scaled(2560, 1440, 2094, 1262, 2153, 1328,
-                                                                 name="start_mission", hcenter=True))
+        return self.find_start_btn(
+            threshold=threshold, box=self.box_of_screen_scaled(2560, 1440, 2094, 1262, 2153, 1328, name="start_mission",
+                                                               hcenter=True))
 
     def find_big_bottom_start_btn(self, threshold=0):
-        return self.find_start_btn(threshold=threshold,
-                                   box=self.box_of_screen_scaled(2560, 1440, 1667, 1259, 1728, 1328,
-                                                                 name="start_mission", hcenter=True))
+        return self.find_start_btn(
+            threshold=threshold, box=self.box_of_screen_scaled(2560, 1440, 1667, 1259, 1728, 1328, name="start_mission",
+                                                               hcenter=True))
 
     def find_letter_btn(self, threshold=0):
-        return self.find_start_btn(threshold=threshold,
-                                   box=self.box_of_screen_scaled(2560, 1440, 1630, 852, 1884, 920, name="letter_btn",
-                                                                 hcenter=True))
+        return self.find_start_btn(
+            threshold=threshold, box=self.box_of_screen_scaled(2560, 1440, 1630, 852, 1884, 920, name="letter_btn",
+                                                               hcenter=True))
 
     def find_letter_reward_btn(self, threshold=0):
-        return self.find_start_btn(threshold=threshold,
-                                   box=self.box_of_screen_scaled(2560, 1440, 1071, 1160, 1120, 1230,
-                                                                 name="letter_reward_btn", hcenter=True))
+        return self.find_start_btn(
+            threshold=threshold, box=self.box_of_screen_scaled(2560, 1440, 1071, 1160, 1120, 1230,
+                                                               name="letter_reward_btn", hcenter=True))
 
     def find_drop_rate_btn(self, threshold=0):
-        return self.find_start_btn(threshold=threshold, box=self.box_of_screen_scaled(2560, 1440, 1060, 935, 1420, 1000,
-                                                                                      name="drop_rate_btn",
-                                                                                      hcenter=True))
+        return self.find_start_btn(
+            threshold=threshold, box=self.box_of_screen_scaled(2560, 1440, 1060, 935, 1420, 1000, name="drop_rate_btn",
+                                                               hcenter=True))
 
     def find_esc_menu(self, threshold=0):
         return self.find_one("quit_big_icon", threshold=threshold)
@@ -94,9 +96,7 @@ class CommissionsTask(BaseDNATask):
         start = time.time()
         while time.time() - start < time_out:
             self.send_key("esc")
-            if self.wait_until(
-                    self.find_esc_menu, time_out=2, raise_if_not_found=False
-            ):
+            if self.wait_until(self.find_esc_menu, time_out=2, raise_if_not_found=False):
                 found = True
                 break
         else:
@@ -192,7 +192,14 @@ class CommissionsTask(BaseDNATask):
         drop_rate = self.config.get("委托手册", "不使用")
         if drop_rate == "不使用":
             return
-        elif drop_rate == "100%":
+        round_to_use = [int(num) for num in re.findall(r'\d+', self.config.get("委托手册指定轮次", ""))]
+        if len(round_to_use) != 0:
+            if self.mission_status != Mission.CONTINUE:
+                if 1 not in round_to_use:
+                    return
+            elif (self.current_round + 1) not in round_to_use:
+                return
+        if drop_rate == "100%":
             self.click_relative(0.40, 0.56)
         elif drop_rate == "200%":
             self.click_relative(0.50, 0.56)
@@ -237,9 +244,8 @@ class CommissionsTask(BaseDNATask):
 
     def choose_letter_reward_zero(self):
         self.wait_until(
-            condition=lambda: self.find_next_hint(0.60, 0.64, 0.67, 0.67, r'[:：]')
-                              and self.find_next_hint(0.33, 0.64, 0.40, 0.67, r'[:：]'),
-            time_out=4)
+            condition=lambda: self.find_next_hint(0.60, 0.64, 0.67, 0.67, r'[:：]') and self.find_next_hint(
+                0.33, 0.64, 0.40, 0.67, r'[:：]'), time_out=4)
         if self.find_next_hint(0.33, 0.64, 0.40, 0.67, r'[:：]0'):
             self.log_info_notify("选择第一个奖励")
             self.click(0.36, 0.66, after_sleep=0.5)
@@ -278,9 +284,7 @@ class CommissionsTask(BaseDNATask):
     def use_skill(self, skill_time):
         if not hasattr(self, "config"):
             return
-        if self.config.get(
-                "使用技能", "不使用"
-        ) != "不使用" and time.time() - skill_time >= self.config.get("技能释放频率", 5):
+        if self.config.get("使用技能", "不使用") != "不使用" and time.time() - skill_time >= self.config.get("技能释放频率", 5):
             skill_time = time.time()
             if self.config.get("使用技能") == "战技":
                 self.get_current_char().send_combat_key()
@@ -291,6 +295,7 @@ class CommissionsTask(BaseDNATask):
         return skill_time
 
     def create_skill_ticker(self):
+
         def action():
             if self.config.get("使用技能", "不使用") == "不使用":
                 return
@@ -445,6 +450,7 @@ class CommissionsTask(BaseDNATask):
 
 
 class QuickMoveTask:
+
     def __init__(self, owner: "CommissionsTask"):
         self._owner = owner
         self._move_task = None
