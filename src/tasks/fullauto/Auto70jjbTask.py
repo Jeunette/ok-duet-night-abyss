@@ -64,7 +64,7 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
         while True:
             if self.in_team():
                 self.get_wave_info()
-                if self.current_wave != 0:
+                if self.current_wave != -1:
                     if self.current_wave != _wave:
                         _wave = self.current_wave
                         _wave_start = time.time()
@@ -94,10 +94,10 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
                 _wave_start = time.time()
 
                 self.reset_wave_info()
-                while self.current_wave == 0 and time.time() - _wave_start < 2:
+                while self.current_wave == -1 and time.time() - _wave_start < 2:
                     self.get_wave_info()
                     self.sleep(0.2)
-                if self.current_wave == 0:
+                if self.current_wave == -1:
                     self.log_info('未正确到达任务地点')
                     self.open_in_mission_menu()
                     self.sleep(0.5)
@@ -118,14 +118,15 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
         n = self.config.get('轮次', 3)
         if self.current_round >= n:
             return True
-        
+
     def find_track_point(self, x1, y1, x2, y2) -> bool:
-        box = self.box_of_screen_scaled(2560, 1440, 2560*x1, 1440*y1, 2560*x2, 1440*y2, name="find_track_point", hcenter=True)
+        box = self.box_of_screen_scaled(2560, 1440, 2560 * x1, 1440 * y1, 2560 * x2, 1440 * y2, name="find_track_point",
+                                        hcenter=True)
         return super().find_track_point(threshold=0.7, box=box)
-        
+
     def walk_to_aim(self):
         found_target = False
-        if self.find_track_point(0.20,0.54,0.22,0.59):
+        if self.find_track_point(0.20, 0.54, 0.22, 0.59):
             #70皎皎币-无电梯
             found_target = True
             self.send_key_down("lalt")
@@ -136,9 +137,9 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(0.1)
             self.send_key_down(self.get_dodge_key())
             self.sleep(2.2)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
             self.send_key_down(self.get_dodge_key())
             self.sleep(2.2)
@@ -148,15 +149,15 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(1)
             self.send_key_up(self.get_dodge_key())
             self.sleep(0.1)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
             self.send_key_down(self.get_dodge_key())
             self.sleep(1.8)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
             self.send_key_down(self.get_dodge_key())
             self.sleep(2.2)
@@ -166,10 +167,10 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             #分支1直接到达，未到达则进入分支2继续往前走
             start = time.time()
             self.reset_wave_info()
-            while self.current_wave == 0 and time.time() - start < 2:
+            while self.current_wave == -1 and time.time() - start < 2:
                 self.get_wave_info()
-                self.sleep(0.2) 
-            if self.current_wave == 0:
+                self.sleep(0.2)
+            if self.current_wave == -1:
                 self.send_key_down('a')
                 self.sleep(0.2)
                 self.send_key_down(self.get_dodge_key())
@@ -179,13 +180,13 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
                 self.sleep(0.1)
                 self.send_key_up('a')
             self.send_key_up("lalt")
-            return             
+            return
 
-        if self.find_track_point(0.66,0.67,0.69,0.72):
+        if self.find_track_point(0.66, 0.67, 0.69, 0.72):
             #70皎皎币-电梯右
             found_target = True
             self.reset_and_transport()
-            self.send_key('s', down_time=0.2,after_sleep=0.2)
+            self.send_key('s', down_time=0.2, after_sleep=0.2)
             self.middle_click(after_sleep=0.2)
             self.send_key_down("lalt")
             self.sleep(0.05)
@@ -199,9 +200,9 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(0.1)
             self.send_key_up("a")
             self.sleep(0.1)
-            self.send_key('space',down_time=0.3,after_sleep=0.2)
-            self.send_key('space',down_time=0.3,after_sleep=0.4)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key('space', down_time=0.3, after_sleep=0.2)
+            self.send_key('space', down_time=0.3, after_sleep=0.4)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
             self.send_key_down(self.get_dodge_key())
             self.sleep(2.2)
@@ -209,7 +210,7 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(0.1)
             self.send_key_up(self.get_dodge_key())
             self.sleep(0.2)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.1)
             self.send_key_up("w")
             self.sleep(0.7)
@@ -221,7 +222,7 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(0.7)
             self.send_key_up(self.get_dodge_key())
             self.sleep(0.1)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
             self.send_key_down(self.get_dodge_key())
             self.sleep(2.5)
@@ -230,9 +231,9 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.send_key_up('w')
             self.send_key_up("lalt")
             self.reset_and_transport()
-            return            
+            return
 
-        if self.find_track_point(0.32,0.67,0.35,0.73):
+        if self.find_track_point(0.32, 0.67, 0.35, 0.73):
             #70皎皎币-电梯左
             found_target = True
             self.reset_and_transport()
@@ -248,7 +249,7 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(0.8)
             self.send_key_up(self.get_dodge_key())
             self.sleep(0.1)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
             self.send_key_down(self.get_dodge_key())
             self.sleep(2)
@@ -258,7 +259,7 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(0.8)
             self.send_key_up(self.get_dodge_key())
             self.sleep(0.1)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.8)
             self.send_key_down(self.get_dodge_key())
             self.sleep(1)
@@ -271,9 +272,9 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.send_key_up('w')
             self.send_key_up("lalt")
             self.reset_and_transport()
-            return            
+            return
 
-        if self.find_track_point(0.50,0.71,0.53,0.76):
+        if self.find_track_point(0.50, 0.71, 0.53, 0.76):
             #70皎皎币-电梯中
             found_target = True
             self.reset_and_transport()
@@ -289,7 +290,7 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(1.2)
             self.send_key_up(self.get_dodge_key())
             self.sleep(0.2)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(0.4)
             self.send_key_down('s')
             self.sleep(0.3)
@@ -297,11 +298,11 @@ class Auto70jjbTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.sleep(0.4)
             self.send_key_up('s')
             self.sleep(1)
-            self.send_key(self.get_dodge_key(),  down_time=0.2)
+            self.send_key(self.get_dodge_key(), down_time=0.2)
             self.sleep(2)
             self.send_key_up(self.get_dodge_key())
             self.sleep(0.1)
             self.send_key_up('d')
             self.send_key_up("lalt")
             self.reset_and_transport()
-            return     
+            return

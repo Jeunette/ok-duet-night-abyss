@@ -111,7 +111,7 @@ class ImportTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
         while True:
             if self.in_team():
                 self.get_wave_info()
-                if self.current_wave != 0:
+                if self.current_wave != -1:
                     if self.current_wave != _wave:
                         _wave = self.current_wave
                         _wait_next_wave = False

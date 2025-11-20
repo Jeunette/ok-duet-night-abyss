@@ -18,7 +18,7 @@ class CommissionsTask(BaseDNATask):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.current_round = 0
-        self.current_wave = 0
+        self.current_wave = -1
         self.mission_status = None
         self.action_timeout = 10
         self.wave_future = None
@@ -344,6 +344,7 @@ class CommissionsTask(BaseDNATask):
                     return
                 if prev_wave != self.current_wave:
                     self.info_set("当前波次", self.current_wave)
+            return
         if self.wave_future is None:
             mission_info_box = self.box_of_screen_scaled(2560, 1440, 275, 372, 445, 470, name="mission_info",
                                                          hcenter=True)
@@ -355,12 +356,12 @@ class CommissionsTask(BaseDNATask):
         if self.wave_future is not None:
             self.wave_future.cancel()
             self.wave_future = None
-        self.current_wave = 0
+        self.current_wave = -1
         self.info_set("当前波次", self.current_wave)
 
     def wait_until_get_wave_info(self):
         self.log_info("等待波次信息...")
-        while self.current_wave == 0:
+        while self.current_wave == -1:
             self.get_wave_info()
             self.sleep(0.2)
 

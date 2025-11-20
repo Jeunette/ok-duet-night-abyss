@@ -112,7 +112,7 @@ class AutoDefence(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
     def handle_in_mission(self):
         """处理在副本中的逻辑"""
         self.get_wave_info()
-        if self.current_wave != 0:
+        if self.current_wave != -1:
             # 如果是新的波次，重置状态
             if self.current_wave != self.runtime_state["wave"]:
                 self.runtime_state.update(
@@ -146,7 +146,7 @@ class AutoDefence(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.log_info("任务开始，执行外部移动逻辑")
             self.external_movement()
             self.log_info(f"外部移动执行完毕，等待战斗开始，{DEFAULT_ACTION_TIMEOUT}秒后超时")
-            if not self.wait_until(lambda: self.current_wave != 0, post_action=self.get_wave_info,
+            if not self.wait_until(lambda: self.current_wave != -1, post_action=self.get_wave_info,
                                    time_out=DEFAULT_ACTION_TIMEOUT):
                 self.log_info("等待战斗开始超时，重开任务")
                 self.open_in_mission_menu()
