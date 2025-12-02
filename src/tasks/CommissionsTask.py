@@ -32,7 +32,6 @@ class CommissionsTask(BaseDNATask):
             "使用技能": "不使用",
             "技能释放频率": 5.0,
             "启用自动穿引共鸣": True,
-            "发出声音提醒": True,
             "自动选择首个密函和密函奖励": True,
             "优先选择密函奖励": "不使用",
         })
@@ -41,7 +40,6 @@ class CommissionsTask(BaseDNATask):
             "超时时间": "超时后将重启任务",
             "技能释放频率": "毎几秒释放一次技能",
             "启用自动穿引共鸣": "在需要跑图时时启用触发任务的自动穿引共鸣",
-            "发出声音提醒": "在需要时发出声音提醒",
             "自动选择首个密函和密函奖励": "刷武器密函时推荐同时开启下一选项",
             "优先选择密函奖励": "在上一选项启用时生效",
         })
@@ -227,7 +225,7 @@ class CommissionsTask(BaseDNATask):
                 letter_roi = self.box_of_screen_scaled(2560, 1440, 565, 651, 732, 805, name="letter_roi", hcenter=True)
                 letter_snapshot = letter_roi.crop_frame(self.frame)
                 self.sleep(0.1)
-                self.click_relative_random(0.531, 0.441, 0.577, 0.551, use_safe_move=True, safe_move_box=box, down_time=0.02)
+                self.click_relative_random(0.531, 0.441, 0.577, 0.551, use_safe_move=True, safe_move_box=box, down_time=0.05)
                 self.sleep(0.3)
                 if self.find_one(template=letter_snapshot, box=letter_roi, threshold=0.7):
                     self.log_info_notify("密函已耗尽")

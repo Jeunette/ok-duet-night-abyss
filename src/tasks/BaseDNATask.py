@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
 from functools import cached_property
 
-from ok import BaseTask, Box, Logger, color_range_to_bound, run_in_new_thread, og, GenshinInteraction, PyDirectInteraction
+from ok import BaseTask, Box, Logger, color_range_to_bound, run_in_new_thread, og, GenshinInteraction, PyDirectInteraction, TaskDisabledException
 
 logger = Logger.get_logger(__name__)
 f_black_color = {
@@ -183,10 +183,10 @@ class BaseDNATask(BaseTask):
         return default
 
     def soundBeep(self, _n=None):
-        if hasattr(self, "config") and not self.config.get("发出声音提醒", True):
+        if not self.afk_config.get("提示音", True):
             return
         if _n is None:
-            n = max(1, self.afk_config.get("提示音", 1))
+            n = max(1, self.afk_config.get("提示音次数", 1))
         else:
             n = _n
         run_in_new_thread(
@@ -505,11 +505,22 @@ class BaseDNATask(BaseTask):
         self.genshin_interaction.move_mouse_relative(int(dx), int(dy))
 
     def try_bring_to_front(self):
-        if not self.hwnd.is_foreground():
-            win32api.keybd_event(win32con.VK_MENU, 0, 0, 0)
-            win32api.keybd_event(win32con.VK_MENU, 0, win32con.KEYEVENTF_KEYUP, 0)
-            self.hwnd.bring_to_front()
-            self.sleep(0.5)
+        deadline = time.perf_counter() + 10
+        while time.perf_counter() < deadline:
+            try:
+                if not self.hwnd.is_foreground():
+                    win32api.keybd_event(win32con.VK_MENU, 0, 0, 0)
+                    win32api.keybd_event(win32con.VK_MENU, 0, win32con.KEYEVENTF_KEYUP, 0)
+                    self.hwnd.bring_to_front()
+                    self.sleep(0.5)
+                break
+            except TaskDisabledException:
+                raise
+            except Exception as e:
+                logger.error('try_bring_to_front error', e)
+                self.sleep(1)
+        else:
+            raise Exception("Failed to bring window to front after multiple retries.")
 
 track_point_color = {
     "r": (121, 255),  # Red range
