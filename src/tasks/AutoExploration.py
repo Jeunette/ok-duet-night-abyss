@@ -141,7 +141,6 @@ class AutoExploration(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             self.log_info_notify("任务开始")
             self.soundBeep()
 
-
     def stop_func(self):
         self.get_round_info()
         if self.current_round >= self.config.get("轮次", 3):
