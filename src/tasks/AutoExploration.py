@@ -147,7 +147,7 @@ class AutoExploration(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             return True
 
     def find_serum(self):
-        box = self.box_of_screen(0.022, 0.385, 0.032, 0.422, name="serum_icon", hcenter=True)
+        box = self.box_of_screen(0.022, 0.385, 0.032, 0.456, name="serum_icon", hcenter=True)
         if self.width < 1920 and self.height < 1080:
             threshold = 0.7
         else:
