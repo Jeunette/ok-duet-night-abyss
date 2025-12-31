@@ -210,7 +210,7 @@ class CommissionsTask(BaseDNATask):
         action_timeout = self.action_timeout if timeout == 0 else timeout
         if self.commission_config.get("自动处理密函", False):
             if self.find_letter_interface():
-                box = self.box_of_screen_scaled(2560, 1440, 1190, 610, 2450, 820, name="letter_drag_area", hcenter=True)
+                box = self.box_of_screen_scaled(2560, 1440, 1170, 610, 2450, 820, name="letter_drag_area", hcenter=True)
                 letter_roi = self.box_of_screen_scaled(2560, 1440, 565, 651, 732, 805, name="letter_roi", hcenter=True)
                 letter_snapshot = letter_roi.crop_frame(self.frame)
                 self.sleep(0.1)
@@ -240,7 +240,7 @@ class CommissionsTask(BaseDNATask):
 
                 self.wait_until(
                     condition=lambda: not self.find_letter_interface(),
-                    post_action=lambda: self.click_btn_random(letter_btn, after_sleep=1),
+                    post_action=lambda: self.click_btn_random(letter_btn, after_sleep=1, safe_move_box=box),
                     time_out=action_timeout,
                     raise_if_not_found=True,
                 )

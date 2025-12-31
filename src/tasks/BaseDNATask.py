@@ -226,10 +226,10 @@ class BaseDNATask(BaseTask):
     def log_info_notify(self, msg):
         self.log_info(msg, notify=self.afk_config['弹出通知'])
 
-    def move_mouse_to_safe_position(self, save_current_pos: bool = True, box: Union[Box, None] = None):
+    def move_mouse_to_safe_position(self, save_current_pos: bool = True, boxes: Union[list[Box], Box, None] = None):
         if self.afk_config["防止鼠标干扰"]:
             self.old_mouse_pos = win32api.GetCursorPos() if save_current_pos else None
-            if self.rel_move_if_in_win(0.95, 0.6, box=box):
+            if self.rel_move_if_in_win(0.95, 0.6, boxes=boxes):
                 pass
             else:
                 self.old_mouse_pos = None
@@ -340,7 +340,7 @@ class BaseDNATask(BaseTask):
         abs_pos = self.executor.interaction.capture.get_abs_cords(random_x, random_y)
         win32api.SetCursorPos(abs_pos)
     
-    def _perform_random_click(self, x_abs, y_abs, use_safe_move=False, safe_move_box=None, down_time=0.0, post_sleep=0.0, after_sleep=0.0):
+    def _perform_random_click(self, x_abs, y_abs, use_safe_move=False, safe_move_box: Union[list[Box], Box, None]=None, down_time=0.0, post_sleep=0.0, after_sleep=0.0):
         x = int(x_abs)
         y = int(y_abs)
 
@@ -353,7 +353,7 @@ class BaseDNATask(BaseTask):
         if not self.hwnd.is_foreground():
             if use_safe_move:
                 _down_time = 0.01 if down_time == 0.0 else down_time
-                self.move_mouse_to_safe_position(box=safe_move_box)
+                self.move_mouse_to_safe_position(boxes=safe_move_box)
             self.click(x, y, down_time=_down_time)
             if use_safe_move:
                 self.move_back_from_safe_position()
@@ -364,11 +364,18 @@ class BaseDNATask(BaseTask):
 
         self.sleep(_after_sleep)
 
-    def click_btn_random(self, box: Box, down_time=0.0, post_sleep=0.0, after_sleep=0.0):
-        safe_move_box = box.copy(x_offset=-box.width*0.20, width_offset=box.width * 8.1,
+    def click_btn_random(self, box: Box, safe_move_box: Box = None, down_time=0.0, post_sleep=0.0, after_sleep=0.0):
+        box = box.copy(x_offset=-box.width*0.20, width_offset=box.width * 8.1,
                                  y_offset=-box.height*0.30, height_offset=box.height * 0.7, name='safe_move_box')
         random_x = random.uniform(box.x + box.width, box.x + self.width * 0.12)
         random_y = random.uniform(box.y, box.y + box.height)
+        
+        if safe_move_box is not None:
+            if isinstance(safe_move_box, Box):
+                safe_move_box = [safe_move_box]
+            safe_move_box.append(box)
+        else:
+            safe_move_box = box
 
         self._perform_random_click(
             random_x, random_y, 
@@ -439,7 +446,7 @@ class BaseDNATask(BaseTask):
         (x1, y1), (x2, y2) = [hwnd_window.get_abs_cords(x, y) for x, y in coords]
         return x1 <= mouse_x < x2 and y1 <= mouse_y < y2
 
-    def rel_move_if_in_win(self, x=0.5, y=0.5, box=None):
+    def rel_move_if_in_win(self, x=0.5, y=0.5, boxes: Union[list[Box], Box, None] = None):
         """
         如果鼠标在窗口内，则将其移动到游戏窗口内的相对位置。
 
@@ -447,10 +454,17 @@ class BaseDNATask(BaseTask):
             x (float): 相对 x 坐标 (0.0 到 1.0)。
             y (float): 相对 y 坐标 (0.0 到 1.0)。
         """
-        if box is not None:
-            self.draw_boxes(box.name, box, "blue")
-        if not self.is_mouse_in_window() or not self.is_mouse_in_box(box=box):
+        if not self.is_mouse_in_window():
             return False
+        if isinstance(boxes, Box):
+            boxes = [boxes]
+        if boxes is not None:
+            self.draw_boxes("safe_move_box", boxes, "blue")
+            for box in boxes:
+                if self.is_mouse_in_box(box=box):
+                    break
+            else:
+                return False
         abs_pos = self.executor.device_manager.hwnd_window.get_abs_cords(self.width_of_screen(x),
                                                                          self.height_of_screen(y))
         win32api.SetCursorPos(abs_pos)
