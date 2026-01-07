@@ -6,6 +6,7 @@ from src.tasks.BaseDNATask import BaseDNATask
 logger = Logger.get_logger(__name__)
 
 default_config = {
+    "快速继续挑战": True,
     "委托手册": "不使用",
     "委托手册指定轮次": "",
     "自动处理密函": True,
@@ -15,6 +16,7 @@ default_config = {
 }
 
 config_description = {
+    "快速继续挑战": "R键快速继续挑战，跳过结算动画。",
     "委托手册指定轮次": "范例: 3,5,8",
     "自动处理密函": "自动完成密函的对话交互与默认奖励领取",
     "密函奖励偏好": "指定优先选择的奖励类型，需开启「自动处理密函」",

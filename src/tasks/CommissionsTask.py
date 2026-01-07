@@ -432,12 +432,20 @@ class CommissionsTask(BaseDNATask):
         while self.current_wave == -1:
             self.get_wave_info()
             self.sleep(0.2)
+    
+    def try_fast_challenge_again(self):
+        if self.commission_config.get("快速继续挑战", False):
+            self.log_debug("尝试快速继续挑战")
+            self.send_key(key="r", down_time=0.050)
+            self.sleep(0.150)
 
     def handle_mission_interface(self, stop_func=lambda: False):
         if self.in_team():
             return False
 
         self.check_for_monthly_card()
+        
+        self.try_fast_challenge_again()
 
         if self.find_letter_reward_btn():
             self.log_info("处理任务界面: 选择密函奖励")

@@ -30,7 +30,6 @@ class AutoEscortTask_Fast(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
         self.mapping_pn = {"-": -1, "+": 1}
 
         self.default_config.update({
-            "快速继续挑战": True,
             "失误截图": True,
             "我已在 OK-DNA 游戏灵敏度设置里配置【游戏内水平/垂直灵敏度】": False,
             "我已在 OK-DNA 游戏灵敏度设置里配置【游戏内射击时水平/垂直灵敏度】": False,
@@ -62,7 +61,6 @@ class AutoEscortTask_Fast(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
             "DEBUG_GATE": 0,
         })
         self.config_description.update({
-            "快速继续挑战": "R键快速继续挑战，跳过结算动画。",
             "失误截图": "ok-duet-night-abyss\screenshots 文件夹下保存，重启OK后清空。如成功率较低，长时间使用可以考虑关闭（截图文件可能会过度占用空间）。",
             "我已在 OK-DNA 游戏灵敏度设置里配置【游戏内水平/垂直灵敏度】": "必须勾选才能执行任务！",
             "我已在 OK-DNA 游戏灵敏度设置里配置【游戏内射击时水平/垂直灵敏度】": "必须勾选才能执行任务！",
@@ -385,10 +383,6 @@ class AutoEscortTask_Fast(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
                         )
                         _start_time = 0
                         _path_end_time = 0
-            
-            if self.config.get("快速继续挑战", False):
-                self.send_key(key="r", down_time=0.050)
-                self.sleep(0.050)
 
             _status = self.handle_mission_interface()
             if _status == Mission.START:
