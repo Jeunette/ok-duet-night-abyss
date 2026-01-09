@@ -223,11 +223,15 @@ class ImportTask(DNAOneTimeTask, CommissionsTask, BaseCombatTask):
 
     def walk_to_aim(self, former_index=None, delay=0):
         try:
-            self.hold_lalt = True
-            self.sleep(delay)
+            self.fidget_params.update({"skip_jitter": True})
+            self.sleep(1)
+            self.fidget_params.update({"hold_lalt": True})
+            self.sleep(0.5)
+            self.fidget_params.update({"skip_jitter": False})
+            self.sleep(delay-1.5)
             ret = self._walk_to_aim(former_index)
         finally:
-            self.hold_lalt = False
+            self.fidget_params.update({"hold_lalt": False})
         return ret
 
     def _walk_to_aim(self, former_index=None):

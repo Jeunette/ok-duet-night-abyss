@@ -78,7 +78,7 @@ class BaseDNATask(BaseTask):
         self.next_monthly_card_start = 0
         self._logged_in = False
         self.enable_fidget_action = True
-        self.hold_lalt = False
+        self.fidget_params = {"hold_lalt": False, "skip_jitter": False}
         self.sensitivity_config = self.get_global_config('Game Sensitivity Config')  # 游戏灵敏度配置
         self.onetime_seen = set()
         self.onetime_queue = deque()
@@ -648,7 +648,8 @@ class BaseDNATask(BaseTask):
             interaction = self.executor.interaction
             vk_code = interaction.get_key_by_str(key)
             event = win32con.WM_KEYDOWN if is_down else win32con.WM_KEYUP
-            interaction.post(event, vk_code, interaction.lparam)
+            lparam = interaction.make_lparam(vk_code)
+            interaction.post(event, vk_code, lparam)
 
         def get_magic_sleep_time():
             """
@@ -678,7 +679,7 @@ class BaseDNATask(BaseTask):
             if not self.afk_config.get("鼠标抖动", True):
                 return
 
-            if self.hold_lalt:
+            if self.fidget_params.get("hold_lalt", False):
                 if not lalt_pressed:
                     self.log_info("[LAlt保持] 激活: 按下 LAlt")
                     send_key_raw("lalt", True)
@@ -704,7 +705,7 @@ class BaseDNATask(BaseTask):
 
         def perform_mouse_jitter(current_drift):
             """执行鼠标微小抖动，返回更新后的漂移量"""
-            if not self.afk_config.get("鼠标抖动", True):
+            if not self.afk_config.get("鼠标抖动", True) or self.fidget_params.get("skip_jitter", False):
                 return current_drift
 
             if self.afk_config.get("鼠标抖动锁定在窗口范围", True):
