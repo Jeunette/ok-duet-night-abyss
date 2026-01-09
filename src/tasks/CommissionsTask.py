@@ -158,11 +158,11 @@ class CommissionsTask(BaseDNATask):
         if self.in_team():
             return False
         action_timeout = self.action_timeout if timeout == 0 else timeout
-        continue_btn = self.wait_until(self.find_ingame_continue_btn, time_out=action_timeout, raise_if_not_found=True)
-        left_extend = -continue_btn.width / self.width
+        # continue_btn = self.wait_until(self.find_ingame_continue_btn, time_out=action_timeout, raise_if_not_found=True)
+        # left_extend = -continue_btn.width / self.width
         self.wait_until(
-            condition=lambda: not self.find_ingame_continue_btn(),
-            post_action=lambda: self.click_box_random(continue_btn, left_extend=left_extend, right_extend=0.1, up_extend=-0.002, down_extend=-0.002, post_sleep=0, after_sleep=0.25),
+            condition=lambda: not self.find_ingame_continue_btn() and not self.find_ingame_quit_btn(),
+            post_action=lambda: self.click_relative_random(0.647, 0.683, 0.696, 0.704, after_sleep=0.25),
             time_out=action_timeout,
             raise_if_not_found=True,
         )
@@ -458,7 +458,7 @@ class CommissionsTask(BaseDNATask):
             self.start_mission()
             self.mission_status = Mission.START
             return
-        elif self.find_ingame_continue_btn():
+        elif self.find_ingame_continue_btn() or self.find_ingame_quit_btn():
             if stop_func():
                 self.log_info("处理任务界面: 终止任务")
                 return Mission.STOP
